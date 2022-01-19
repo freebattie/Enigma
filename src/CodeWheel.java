@@ -25,23 +25,19 @@ class CodeWheel {
     public void setWheelRingOffset(int offsett) {
         this.wheelRingOffset = offsett;
 
-        if (wheelStepPosition + offsett < 26) {
-            this.wheelStepPosition += offsett;
-        } else {
-            int tmp = (wheelStepPosition + offsett) - 26;
-            wheelStepPosition = tmp;
-        }
+
+
     }
 
     public void setWheelRingOffset2(int offsett) {
         this.wheelRingOffset = offsett;
 
-        if (wheelStepPosition - offsett >= 0) {
-            this.wheelStepPosition -= offsett;
-        } else {
-            int tmp = 26 + (wheelStepPosition - offsett);
-            wheelStepPosition = tmp;
-        }
+            if (wheelStepPosition - offsett >= 0) {
+                this.wheelStepPosition -= offsett;
+            } else {
+                int tmp = 26 + (wheelStepPosition - offsett);
+                wheelStepPosition = tmp;
+            }
     }
 
     public void setWinding(String winding) {
@@ -53,6 +49,18 @@ class CodeWheel {
         return wheelStepPosition;
     }
 
+    public void setWheelStepPosition(int wheelStepPosition) {
+        this.wheelStepPosition = wheelStepPosition;
+    }
+
+    public int getWheelRingOffset() {
+        return wheelRingOffset;
+    }
+
+    public int getWheelStartPosition() {
+        return wheelStartPosition;
+    }
+
     // verdi mellon 0 og 26 0 == ingen offset;
     // A -> D og B -> M
     // ved offset 1
@@ -61,8 +69,7 @@ class CodeWheel {
     public void setCodeWheelStartPosition(int wheelStartPosition) {
         this.wheelStartPosition = wheelStartPosition;
         this.wheelCurrentPosition = this.wheelStartPosition;
-        //updateWheelStepPosition(wheelStartPosition);
-        // nulstill og tell fra 0 på verdier over 25 0 == start poisjon
+
 
     }
 
@@ -122,7 +129,7 @@ class CodeWheel {
         return tmpChar;
     }
 
-    public char swapChar(char letter) {
+    public char swapChar10(char letter) {
 
         int tmpPosition = 0;
         char z = 'z';
@@ -163,8 +170,85 @@ class CodeWheel {
         }
         return letter;
     }
+    public char swapChar(char letter) {
 
+        int tmpPosition = 0;
+        tmpPosition = letter - (char) 'a';
+
+
+        if (tmpPosition + (wheelCurrentPosition - wheelRingOffset) <= 25 && tmpPosition + (wheelCurrentPosition - wheelRingOffset) >= 0) {
+            tmpPosition =  (tmpPosition + (wheelCurrentPosition - wheelRingOffset));
+        } else if (tmpPosition + (wheelCurrentPosition - wheelRingOffset) > 25) {
+            tmpPosition =  (tmpPosition + (wheelCurrentPosition - wheelRingOffset)) - 26;
+        }
+        //hvis du går inn i denne elsen så er det feil en plass
+        else {
+            tmpPosition =  26 + (tmpPosition + (wheelCurrentPosition - wheelRingOffset));
+
+        }
+
+        letter = alphabet[tmpPosition];
+        tmpPosition = letter - (char) 'a';
+        letter = innerWinding[tmpPosition];
+        tmpPosition = letter - (char) 'a';
+
+
+        if (tmpPosition - (wheelCurrentPosition - wheelRingOffset) <= 25 && tmpPosition - (wheelCurrentPosition - wheelRingOffset) >= 0) {
+            tmpPosition =  (tmpPosition - (wheelCurrentPosition - wheelRingOffset));
+        } else if (tmpPosition - (wheelCurrentPosition - wheelRingOffset) > 25) {
+            tmpPosition =  (tmpPosition - (wheelCurrentPosition - wheelRingOffset)) - 26;
+        }
+        //hvis du går inn i denne elsen så er det feil en plass
+        else {
+            tmpPosition =  26 + (tmpPosition - (wheelCurrentPosition - wheelRingOffset));
+
+        }
+        letter = alphabet[tmpPosition];
+        return letter;
+    }
     public char swapCharReverse(char letter) {
+
+        int tmpPosition = 0;
+        tmpPosition = letter - (char) 'a';
+        if (tmpPosition + (wheelCurrentPosition - wheelRingOffset) <= 25 && tmpPosition + (wheelCurrentPosition - wheelRingOffset) >= 0) {
+            tmpPosition =  (tmpPosition + (wheelCurrentPosition - wheelRingOffset));
+        } else if (tmpPosition + (wheelCurrentPosition - wheelRingOffset) > 25) {
+            tmpPosition =  (tmpPosition + (wheelCurrentPosition - wheelRingOffset)) - 26;
+        }
+        //hvis du går inn i denne elsen så er det feil en plass
+        else {
+            tmpPosition =  26 + (tmpPosition + (wheelCurrentPosition - wheelRingOffset));
+
+        }
+
+        letter = alphabet[tmpPosition];
+
+        for (int i = 0; i <innerWinding.length; i++){
+            if (innerWinding[i] == letter){
+                tmpPosition = i;
+                break;
+            }
+        }
+        letter = alphabet[tmpPosition];
+        tmpPosition = letter - (char) 'a';
+
+
+        if (tmpPosition - (wheelCurrentPosition - wheelRingOffset) <= 25 && tmpPosition - (wheelCurrentPosition - wheelRingOffset) >= 0) {
+            tmpPosition =  (tmpPosition - (wheelCurrentPosition - wheelRingOffset));
+        } else if (tmpPosition - (wheelCurrentPosition - wheelRingOffset) > 25) {
+            tmpPosition =  (tmpPosition - (wheelCurrentPosition - wheelRingOffset)) - 26;
+        }
+        //hvis du går inn i denne elsen så er det feil en plass
+        else {
+            tmpPosition =  26 + (tmpPosition - (wheelCurrentPosition - wheelRingOffset));
+
+        }
+        letter = alphabet[tmpPosition];
+        return letter;
+
+    }
+
+    public char swapCharReverse10(char letter) {
         char z = 'z';
         char a = 'a';
 

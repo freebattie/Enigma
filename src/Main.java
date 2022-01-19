@@ -1,3 +1,31 @@
+import java.util.ArrayList;
+
+
+
+/*
+aa
+    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    BDFHJLCPRTXVZNYEIWGAKMUSQO C
+    AJDKSIRUXBLHWTMCQGZNPYFVOE C c->
+    EKMFLGDQVZNTOWYHXUSPAIBRCJ F D
+    YRUHQSLDPXNGOKMIEBFZCWVJAT S F
+
+
+     ABCDEFGHIJKLMNOPQRSTUVWXYZ
+I   EKMFLGDQVZNTOWYHXUSPAIBRCJ k->j
+II   AJDKSIRUXBLHWTMCQGZNPYFVOE b c->b
+III  BDFHJLCPRTXVZNYEIWGAKMUSQO d d
+     YRUHQSLDPXNGOKMIEBFZCWVJAT h
+
+ */
+
+
+
+
+
+
+
+
 
 
 public class Main {
@@ -43,22 +71,20 @@ public class Main {
 
         //setter opp første boksen
 
-        enigma1.insertWheelAtPositionOne(enigma1.getWheelI());
+        enigma1.insertWheelAtPositionOne(enigma1.getWheelIII());
         enigma1.insertWheelAtPositionTwo(enigma1.getWheelII());
-        enigma1.insertWheelAtPositionthree(enigma1.getWheelIII());
+        enigma1.insertWheelAtPositionthree(enigma1.getWheelI());
         enigma1.setActivReflector(enigma1.getReflectorB());
-        enigma1.setRingOffsett(4,0,0);
-        enigma1.setEnigmaActiveWheelsStartingPosition(4,0,0);
-        enigma1.addCable('h','k');
-        enigma1.addCable('b','c');
-        enigma1.addCable('l','f');
-        enigma1.addCable('z','a');
+        enigma1.setRingOffsett(1,3,1);
+        enigma1.setEnigmaActiveWheelsStartingPosition(1,4,1);
+        //enigma1.addCable('h','k');
+        //enigma1.addCable('b','c');
+        //enigma1.addCable('l','f');
+        //enigma1.addCable('z','a');
         // inkrypter teksten
         System.out.println("kodet melding: ");
         // her skriver du inn teksten du vill kryptere
-        message = "youcannotputspacesinthetextyoucannotputspacesinthetextyoucannotputspacesinthetext" +
-                      "youcannotputspacesinthetextyoucannotputspacesinthetextyoucannotputspacesinthetext" +
-                      "youcannotputspacesinthetext";
+        message = "you can now put spaces in the text you can now put spaces in the text you can now put spaces in the text you can now put spaces in the text you can now put spaces in the text you can now put spaces in the text you can now put spaces in the text";
         enigma1.planeTextToIncode(message);
 
         enigma1.runEnigmaMachine();
@@ -67,17 +93,18 @@ public class Main {
         // kopi av kryptert beskjed til bruk i boks 3
         String stolenText = scrambledText;
 
-        enigma2.insertWheelAtPositionOne(enigma2.getWheelI());
+        enigma2.insertWheelAtPositionOne(enigma2.getWheelIII());
         enigma2.insertWheelAtPositionTwo(enigma2.getWheelII());
-        enigma2.insertWheelAtPositionthree(enigma2.getWheelIII());
+        enigma2.insertWheelAtPositionthree(enigma2.getWheelI());
         enigma2.setActivReflector(enigma2.getReflectorB());
-        enigma2.setRingOffsett(4,0,0);
-        enigma2.setEnigmaActiveWheelsStartingPosition(4,0,0);
+        enigma2.setRingOffsett(1,3,1);
+        enigma2.setEnigmaActiveWheelsStartingPosition(1,4,1);
+        /*
         enigma2.addCable('h','k');
         enigma2.addCable('b','c');
         enigma2.addCable('l','f');
         enigma2.addCable('z','a');
-
+        */
         System.out.println("Enigma maskin med rett instillinger: ");
         // sender inn krypter beskjed med like innstillinger
         enigma2.planeTextToIncode(scrambledText);
@@ -105,12 +132,19 @@ public class Main {
         enigma3.runEnigmaMachine();
         stolenText = enigma3.getOutput();
         System.out.println(stolenText);
+        Enigma enigma4 = new Enigma();
+        ArrayList<String> hits = new ArrayList<>();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // OBS OBS OBS
         // denne funksjonen tester ca 11 millioner forskjellige kombinasjoner av hjulene og ring offsett, kan ta lang tid
         // på min maskin tok det ca 11min
         //testEnigmaCombos();
+        //loopAllSetttings(enigma4,"aa","bd",hits,false);
+        //loopAllSetttings(enigma4,"bb","aj",hits,true);
+        //for (String s : hits){
+        //    System.out.println(s);
+        // }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
     private static void testEnigmaCombos() {
@@ -129,43 +163,112 @@ public class Main {
         //enigma1.setRingOffsett(20,17,4);
 
         double x = 0d;
-        x = loopAllSetttings(enigma1, message, x);
+
         System.out.println("ingen feil funnet etter  :" );
         System.out.println("ingen feil funnet etter  :" +x +" forsøk");
     }
 
-    private static double loopAllSetttings(Enigma enigma1, String message, double x) {
+    private static ArrayList<String> loopAllSetttings(Enigma enigma1, String message, String expected, ArrayList<String> hits ,boolean isrun) {
 
 
-            for (int b= 0 ; b<26 ; b++){
 
-                for (int c= 0 ;c<26 ; c++){
-
-                    for (int i= 0 ; i<26 ; i++){
-                        for (int j= 0 ; j<26 ; j++){
-                            for (int k= 0 ;k<26 ; k++){
-                                enigma1.setRingOffsett(0,b,c);
-                                enigma1.setEnigmaActiveWheelsStartingPosition(i,j,k);
+                ArrayList<String> remove = new ArrayList<>();
+                for (int a= 0 ; a<26 ; a++) {
+                    for (int i= 0 ; i<26 ; i++) {
+                        for (int j = 0; j < 26; j++) {
+                            for (int k = 0; k < 26; k++) {
+                                enigma1.setRingOffsett(a, j, i);
+                                enigma1.setEnigmaActiveWheelsStartingPosition(k, j, i);
                                 enigma1.planeTextToIncode(message);
                                 enigma1.runEnigmaMachine();
-                                String scrambledText = enigma1.getOutput();
-                                //System.out.println(scrambledText);
-                                enigma1.setEnigmaActiveWheelsStartingPosition(i,j,k);
-                                enigma1.planeTextToIncode(scrambledText);
-                                enigma1.runEnigmaMachine();
                                 String text = enigma1.getOutput();
-                                x++;
-                                if (!text.equalsIgnoreCase(message) )
-                                    System.out.println("is working :" +false);
+
+                                if (expected.equalsIgnoreCase(text)) {
+                                    //System.out.println("is working : " + text);
+                                    if (isrun){
+                                        for (String x: hits){
+                                            if (!x.contains(a+" "+k+" "+j+" "+i)){
+                                                remove.add(x);
+                                            }
+
+                                        }
+                                    }
+                                    else
+                                        hits.add(a+" "+k+" "+j+" "+i);
+
+                                    enigma1.setEnigmaActiveWheelsStartingPosition(i, j, k);
+                                    enigma1.planeTextToIncode(message);
+                                    enigma1.runEnigmaMachine();
+                                    text = enigma1.getOutput();
+
+                                    if (expected.equalsIgnoreCase(text)) {
+                                        //System.out.println("is working : " + text);
+                                        if (isrun){
+                                            for (String x: hits){
+                                                if (!x.contains(a+" "+i+" "+j+" "+k)){
+                                                    remove.add(x);
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                            hits.add(a+" "+i+" "+j+" "+k);
+                                    }
+                                    enigma1.setEnigmaActiveWheelsStartingPosition(j, i, k);
+                                    enigma1.planeTextToIncode(message);
+                                    enigma1.runEnigmaMachine();
+                                    text = enigma1.getOutput();
+
+                                    if (expected.equalsIgnoreCase(text)) {
+                                        //System.out.println("is working : " + text);
+                                        if (isrun){
+                                            for (String x: hits){
+                                                if (!x.contains(a+" "+j+" "+i+" "+k)){
+                                                    remove.add(x);
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                            hits.add(a+" "+j+" "+i+" "+k);
+                                    }
+                                }
 
                             }
+
 
                         }
                     }
                 }
+                hits.removeAll(remove);
 
+        return hits;
+    }
+    public static void Test2(){
+        Enigma enigma1 = new Enigma();
+
+
+
+        enigma1.insertWheelAtPositionOne(enigma1.getWheelI());
+        enigma1.insertWheelAtPositionTwo(enigma1.getWheelII());
+        enigma1.insertWheelAtPositionthree(enigma1.getWheelIII());
+        enigma1.setActivReflector(enigma1.getReflectorB());
+        for (int k= 0 ;k<26 ; k++){
+            String message = "a";
+            enigma1.setRingOffsett(k,0,0);
+            enigma1.setEnigmaActiveWheelsStartingPosition(k,0,0);
+            enigma1.planeTextToIncode(message);
+            enigma1.runEnigmaMachine();
+
+            String scrambledText = enigma1.getOutput();
+            if (scrambledText.equals("b")){
+                System.out.println(scrambledText);
+                System.out.println(" setting");
             }
 
-        return x;
+
+
+
+        }
     }
 }

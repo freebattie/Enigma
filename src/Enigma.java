@@ -45,9 +45,9 @@ class Enigma {
     }
 
     Enigma() {
-        CodeWheel wheel1 = new CodeWheel("EKMFLGDQVZNTOWYHXUSPAIBRCJ", 18);
-        CodeWheel wheel2 = new CodeWheel("AJDKSIRUXBLHWTMCQGZNPYFVOE", 6);
-        CodeWheel wheel3 = new CodeWheel("BDFHJLCPRTXVZNYEIWGAKMUSQO", 23);
+        CodeWheel wheel1 = new CodeWheel("EKMFLGDQVZNTOWYHXUSPAIBRCJ", 16);
+        CodeWheel wheel2 = new CodeWheel("AJDKSIRUXBLHWTMCQGZNPYFVOE", 4);
+        CodeWheel wheel3 = new CodeWheel("BDFHJLCPRTXVZNYEIWGAKMUSQO", 21);
         CodeWheel wheel4 = new CodeWheel("ESOVPZJAYQUIRHXLNFTGKDCMWB", 10);
         CodeWheel wheel5 = new CodeWheel("VZBRGITYUPSDNHLXAWMJQOFECK", 0);
         CodeWheel reflector1 = new CodeWheel("EJMZALYXVBWFCRQUONTSPIKHGD", 0);
@@ -76,9 +76,9 @@ class Enigma {
     }
 
     public void setRingOffsett(int a, int b, int c) {
-        activeWheels[0].setWheelRingOffset(a);
-        activeWheels[1].setWheelRingOffset(b);
-        activeWheels[2].setWheelRingOffset(c);
+        activeWheels[0].setWheelRingOffset(a-1 < 0 ?0:a-1);
+        activeWheels[1].setWheelRingOffset(b-1 < 0 ? 0 : b-1);
+        activeWheels[2].setWheelRingOffset(c-1 < 0 ? 0: c-1);
     }
 
     // kun små bokstaver
@@ -87,7 +87,7 @@ class Enigma {
     }
 
     public void planeTextToIncode(String input) {
-        this.input = input.toLowerCase();
+        this.input = input.toLowerCase().replace(" ","");
     }
 
     public void runEnigmaMachine() {
@@ -95,20 +95,13 @@ class Enigma {
         StringBuilder sb = new StringBuilder();
         for (char letter : chars) {
             char tmpLetter = letter;
+            updateWheelsStepPosition();
+            rotateWheels();
             tmpLetter = handelFirstCodeWheel(tmpLetter);
+            tmpLetter = handleSecondCodeWheel(tmpLetter);
+            tmpLetter = handleThirdCodeWheel(tmpLetter);
 
-            if (activeWheels[0].getPosition() == activeWheels[0].getStepPosition()) {
-                tmpLetter = handleSecondCodeWheelRotating(tmpLetter);
-            } else if (activeWheels[0].getPosition() == activeWheels[0].getStepPosition() + 1 &&
-                    activeWheels[1].getPosition() == activeWheels[1].getStepPosition()) {
-                tmpLetter = handleSecondCodeWheelRotating(tmpLetter);
 
-            } else
-                tmpLetter = activeWheels[1].swapChar(tmpLetter);
-            if (activeWheels[0].getPosition() == activeWheels[0].getStepPosition() && activeWheels[1].getPosition() == activeWheels[1].getStepPosition()) {
-                tmpLetter = handleThirdCodeWheelRotating(tmpLetter);
-            } else
-                tmpLetter = activeWheels[2].swapChar(tmpLetter);
 
             tmpLetter = handelReverse(tmpLetter);
             sb.append(tmpLetter);
@@ -116,22 +109,51 @@ class Enigma {
         output = sb.toString();
     }
 
+    private void rotateWheels() {
+
+        if (activeWheels[0].getPosition() == activeWheels[0].getStepPosition()) {
+            activeWheels[1].moveWheel();
+        }else if (activeWheels[0].getPosition() == activeWheels[0].getStepPosition() + 1 &&
+                activeWheels[1].getPosition() == activeWheels[1].getStepPosition()) {
+            activeWheels[1].moveWheel();
+
+        }
+        if (activeWheels[1].getPosition() == activeWheels[1].getStepPosition()) {
+            activeWheels[2].moveWheel();
+            activeWheels[1].moveWheel();
+        }
+        activeWheels[0].moveWheel();
+    }
+
+    private void updateWheelsStepPosition() {
+        for (CodeWheel w : activeWheels){
+            int step =w.getStepPosition();
+            int off =w.getWheelRingOffset();
+            int start = w.getWheelStartPosition();
+        }
+
+    }
+
     private char handelFirstCodeWheel(char tmpLetter) {
         tmpLetter = swapIfCable(tmpLetter);
         tmpLetter = swapInETW(tmpLetter);
-        activeWheels[0].moveWheel();
+
         tmpLetter = activeWheels[0].swapChar(tmpLetter);
 
         return tmpLetter;
     }
 
-    private char handleSecondCodeWheelRotating(char tmpLetter) {
-        activeWheels[1].moveWheel();
+    private char handleSecondCodeWheel(char tmpLetter) {
+
         tmpLetter = activeWheels[1].swapChar(tmpLetter);
 
         return tmpLetter;
     }
+    private char handleThirdCodeWheel(char tmpLetter) {
 
+        tmpLetter = activeWheels[2].swapChar(tmpLetter);
+        return tmpLetter;
+    }
     private char handelReverse(char tmpLetter) {
         tmpLetter = runActiveReflector(tmpLetter);
         tmpLetter = activeWheels[2].swapCharReverse(tmpLetter);
@@ -142,11 +164,7 @@ class Enigma {
         return tmpLetter;
     }
 
-    private char handleThirdCodeWheelRotating(char tmpLetter) {
-        activeWheels[2].moveWheel();
-        tmpLetter = activeWheels[2].swapChar(tmpLetter);
-        return tmpLetter;
-    }
+
 
     private char swapInETW(char tmpLetter) {
         return this.etw.swapChar(tmpLetter);
@@ -186,10 +204,10 @@ class Enigma {
         return tmpLetter;
     }
 
-    public void setEnigmaActiveWheelsStartingPosition(int wheelOne, int wheelTwo, int wheelThree) {
-        activeWheels[0].setCodeWheelStartPosition(wheelOne);
-        activeWheels[1].setCodeWheelStartPosition(wheelTwo);
-        activeWheels[2].setCodeWheelStartPosition(wheelThree);
+    public void setEnigmaActiveWheelsStartingPosition(int w1, int w2, int w3) {
+        activeWheels[0].setCodeWheelStartPosition(w1-1 < 0 ?0:w1-1);
+        activeWheels[1].setCodeWheelStartPosition(w2-1 < 0 ?0: w2-1);
+        activeWheels[2].setCodeWheelStartPosition(w3-1 < 0 ?0:w3-1);
     }
 
     public void setActivReflector(CodeWheel reflector) {
@@ -201,7 +219,15 @@ class Enigma {
     }
 
     public String getOutput() {
-        return this.output;
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            if (i % 4 == 0) {
+                result.append(" ");
+            }
+            result.append(output.charAt(i));
+
+        }
+        return output;
     }
 
     public void setActiveCodeWheelAtIndex(CodeWheel wheel, int index) {
