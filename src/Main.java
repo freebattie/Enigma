@@ -38,9 +38,9 @@ public class Main {
      *     enigma1.insertWheelAtPositionOne(enigma1.getWheelIII()); osv for PositionTwo og Three
      * 3.  Velg hvilken reflector maskinen skal bruke, kan velge mellom 3 stk(A,B,C)
      *     enigma1.setActivReflector(enigma1.getReflectorB());
-     * 4.  Velg ring ofsett for alle 3 hjulene 0 == default velg et tall mellom 0-25(a-z)
+     * 4.  Velg ring ofsett for alle 3 hjulene 0 == default velg et tall mellom 1-26(a-z)
      *     enigma1.setRingOffsett(20,17,4);
-     * 5.  Velg start verdi for det 3 hjulene.(mellom 0 og 25)
+     * 5.  Velg start verdi for det 3 hjulene.(mellom 1 og 26)
      *     enigma1.setEnigmaActiveWheelsStartingPosition(17,13,4);
      * 6.  VALGFRITT: legg til krossover kabler, her er det bokstaver i par, du må selv passe på å ikke legge inn en bokstav meir en 1 gang
      *     enigma1.addCable('h','k');
