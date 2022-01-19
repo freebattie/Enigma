@@ -46,4 +46,4 @@ The security of the system depends on machine settings that were generally chang
 Learning and testing help
 * [Info on the Enigma I inner workings](https://www.cryptomuseum.com/crypto/enigma/working.htm)
 * [Wiki](https://en.wikipedia.org/wiki/Enigma_machine)
-* [tested agains](http://people.physik.hu-berlin.de/~palloks/js/enigma/enigma-u_v26_en.html)
+* [Emulator used to vertify output](http://people.physik.hu-berlin.de/~palloks/js/enigma/enigma-u_v26_en.html)
